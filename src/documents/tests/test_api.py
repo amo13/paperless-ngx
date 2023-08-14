@@ -2563,6 +2563,42 @@ class TestDocumentApi(DirectoriesMixin, DocumentConsumeDelayMixin, APITestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
+    def test_create_share_link(self):
+        """
+        GIVEN:
+            - Existing document
+        WHEN:
+            - API request is made to generate a share_link
+        THEN:
+            - links is created with a slug and associated with document
+        """
+        doc = Document.objects.create(
+            title="test",
+            mime_type="application/pdf",
+            content="this is a document which will have notes added",
+        )
+        resp = self.client.post(
+            "/api/share_links/",
+            data={
+                "expiration": "",
+                "document": doc.pk,
+            },
+        )
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+
+        response = self.client.get(
+            f"/api/documents/{doc.pk}/share_links/",
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        resp_data = response.json()
+
+        self.assertEqual(len(resp_data), 1)
+
+        self.assertGreater(len(resp_data[0]["slug"]), 0)
+
 
 class TestDocumentApiV2(DirectoriesMixin, APITestCase):
     def setUp(self):

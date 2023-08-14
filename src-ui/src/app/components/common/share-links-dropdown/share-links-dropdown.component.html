@@ -1,0 +1,54 @@
+<div ngbDropdown>
+    <button class="btn btn-sm btn-outline-primary me-2" id="shareLinksDropdown" ngbDropdownToggle>
+      <svg class="toolbaricon" fill="currentColor">
+        <use xlink:href="assets/bootstrap-icons.svg#share" />
+      </svg>
+      <div class="d-none d-sm-inline">&nbsp;<ng-container i18n>Share Links</ng-container></div>
+    </button>
+    <div ngbDropdownMenu aria-labelledby="shareLinksDropdown" class="shadow share-links-dropdown">
+      <p class="mb-3" *ngIf="message" [innerHTML]="message | safeHtml"></p>
+
+      <ng-container *ngIf="loading">
+          <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+          <ng-container i18n>Loading...</ng-container>
+      </ng-container>
+
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let link of shareLinks">
+            <div class="small"><ng-container i18n>Expires</ng-container>: {{ link.expiration | customDate:'shortDate' }}</div>
+            <div class="btn-toolbar" role="toolbar" aria-label="Share Link Buttons">
+              <div class="btn-group me-2" role="group" aria-label="Copy">
+                <button type="button me-2 ms-auto" class="btn btn-sm btn-outline-primary" (click)="copy(link)">
+                  <svg class="buttonicon" fill="currentColor">
+                    <use xlink:href="assets/bootstrap-icons.svg#clipboard-fill" />
+                  </svg><span class="visually-hidden" i18n>Copy</span>
+                </button>
+              </div>
+              <div class="btn-group" role="group" aria-label="Delete">
+                <button type="button" class="btn btn-sm btn-outline-danger" (click)="delete(link)">
+                    <svg class="buttonicon" fill="currentColor">
+                        <use xlink:href="assets/bootstrap-icons.svg#trash" />
+                    </svg><span class="visually-hidden" i18n>Delete</span>
+                </button>
+              </div>
+            </div>
+        </li>
+        <li class="list-group-item d-flex pt-3 pb-2">
+          <div class="input-group input-group-sm w-100">
+            <label class="input-group-text" for="addLink">Expires:</label>
+            <select class="form-select form-select-sm" id="addLink">
+              <option value="1">1 Day</option>
+              <option value="7">7 Days</option>
+              <option value="30">30 Days</option>
+              <option>Never</option>
+            </select>
+            <button class="btn btn-sm btn-outline-primary" type="button" (click)="createLink()">
+              <svg class="buttonicon" fill="currentColor">
+                <use xlink:href="assets/bootstrap-icons.svg#plus" />
+              </svg><span class="visually-hidden" i18n>Add</span>
+            </button>
+          </div>
+        </li>
+      </ul>
+    </div>
+</div>
